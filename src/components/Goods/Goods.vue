@@ -4,28 +4,85 @@
     <div class="thumb">
       <div class="custom-control custom-checkbox">
         <!-- 复选框 -->
-        <input type="checkbox" class="custom-control-input" id="cb1" :checked="true" />
-        <label class="custom-control-label" for="cb1">
+        <input
+          type="checkbox"
+          class="custom-control-input"
+          :id="'cb' + id"
+          :checked="state"
+          @change="statechange"
+        />
+        <label class="custom-control-label" :for="'cb' + id">
           <!-- 商品的缩略图 -->
-          <img src="../../assets/logo.png" alt="" />
+          <img :src="img" alt="" />
         </label>
       </div>
     </div>
     <!-- 右侧信息区域 -->
     <div class="goods-info">
       <!-- 商品标题 -->
-      <h6 class="goods-title">商品名称商品名称商品名称商品名称</h6>
+      <h6 class="goods-title">{{ title }}</h6>
       <div class="goods-info-bottom">
         <!-- 商品价格 -->
-        <span class="goods-price">￥0</span>
-        <!-- 商品的数量 -->
+        <span class="goods-price">￥{{ price }}</span>
+        <!-- 商品数量 -->
+        <Counter :count="count" @getCount="getCount"></Counter>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+// 导入Counter组件
+import Counter from "@/components/Counter/Counter.vue";
+
+export default {
+  props: {
+    id: {
+      required: true,
+      type: Number,
+    },
+    title: {
+      default: "",
+      type: String,
+    },
+    price: {
+      default: 10000,
+      type: Number,
+    },
+    img: {
+      default: "",
+      type: String,
+    },
+    // 商品勾选状态
+    state: {
+      default: true,
+      type: Boolean,
+    },
+    // 商品数量
+    count: {
+      default: 1,
+      type: Number,
+    },
+  },
+  methods: {
+    statechange(e) {
+      let id = this.id;
+      let newstate = e.target.checked;
+      // console.log(id);
+      // console.log(newstate);
+      this.$emit("newState", { value: newstate, cid: id });
+    },
+    getCount(e) {
+      console.log("从counts传到goods的数量为");
+      console.log(e);
+      // 将获取到值再传递到APP组件（子传父）
+      this.$emit("sendCount", { num: e, id: this.id });
+    },
+  },
+  components: {
+    Counter,
+  },
+};
 </script>
 
 <style lang="less" scoped>

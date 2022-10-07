@@ -2,23 +2,64 @@
   <div class="footer-container">
     <!-- 左侧的全选 -->
     <div class="custom-control custom-checkbox">
-      <input type="checkbox" class="custom-control-input" id="cbFull" :checked="true" />
+      <input
+        type="checkbox"
+        class="custom-control-input"
+        id="cbFull"
+        :checked="State"
+        @change="changeState"
+      />
       <label class="custom-control-label" for="cbFull">全选</label>
     </div>
 
     <!-- 中间的合计 -->
     <div>
       <span>合计：</span>
-      <span class="total-price">￥{{ 0 }}</span>
+      <span class="total-price">￥{{ tPrice.toFixed(2) }}</span>
     </div>
 
     <!-- 结算按钮 -->
-    <button type="button" class="btn btn-primary btn-settle">结算（{{ 0 }}）</button>
+    <button type="button" class="btn btn-primary btn-settle">
+      结算（{{ tNum }}）
+    </button>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {};
+  },
+  props: {
+    State: {
+      default: true,
+      type: Boolean,
+    },
+    // 总价
+    tPrice: {
+      default: 999999,
+      type: Number,
+    },
+    // 总数量
+    tNum: {
+      default: 0,
+      type: Number,
+    },
+  },
+  methods: {
+    changeState(e) {
+      let fullChangeState = e.target.checked;
+      // console.log(fullChangeState);
+      this.$emit("fullChangeState", fullChangeState);
+    },
+  },
+  computed: {
+    // 总数量
+    totalNum() {
+      return;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
